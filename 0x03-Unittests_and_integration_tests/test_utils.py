@@ -3,6 +3,11 @@
 import unittest
 from parameterized import parameterized
 from typing import Dict, Tuple, List, Any
+from utils import (
+    access_nested_map,
+    get_json,
+    memoize,
+)
 
 
 class TestAccessNestedMap(unittest.TestCase):
