@@ -86,8 +86,8 @@ class TestGithubOrgClient(unittest.TestCase):
         with patch(
                 "client.GithubOrgClient._public_repos_url",
                 new_callable=PropertyMock,
-                ) as mock_public_repos_url:
-            mock_public_repos_url.return_value = test_payload["repos_url"]
+                ) as repos_url:
+            repos_url.return_value = test_payload["repos_url"]
             self.assertEqual(
                 GithubOrgClient("google").public_repos(),
                 [
@@ -95,5 +95,5 @@ class TestGithubOrgClient(unittest.TestCase):
                     "kratu",
                 ],
             )
-            mock_public_repos_url.assert_called_once()
+            repos_url.assert_called_once()
         mock_get_json.assert_called_once()
