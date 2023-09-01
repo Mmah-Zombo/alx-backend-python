@@ -23,3 +23,15 @@ class TestAccessNestedMap(unittest.TestCase):
                                result: Any) -> None:
         """tests if the access method works"""
         self.assertEqual(access_nested_map(dmap, path), result)
+
+    @parameterized.expand([
+        ({}, ("a",), KeyError),
+        ({"a": 1}, ("a", "b"), KeyError)
+    ])
+    def test_access_nested_map_exception(self,
+                                         dmap: Dict,
+                                         path: Tuple[str],
+                                         error: Exception) -> None:
+        """tests if the correct exception is raised"""
+        with self.assertRaises(error):
+            access_nested_map(dmap, path)
