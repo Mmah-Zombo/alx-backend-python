@@ -33,4 +33,5 @@ class TestAccessNestedMap(unittest.TestCase):
                                          path: Tuple[str],
                                          result: Exception) -> None:
         """tests if the right excetion is raised"""
-        self.assertRaises(access_nested_map(dmap, path), result)
+        with self.assertRaises(result):
+            access_nested_map(dmap, path)
