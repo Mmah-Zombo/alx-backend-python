@@ -25,13 +25,13 @@ class TestGithubOrgClient(unittest.TestCase):
         ("abc", {"login": "abc"}),
     ])
     @patch("client.get_json")
-    def test_org(self, org: str, output: Dict, get_json: Mock) -> None:
+    def test_org(self, orgc: str, output: Dict, gjson: Mock) -> None:
         """test that org returns the correct value"""
 
-        get_json.return_value = output
-        goc = GithubOrgClient(org)
+        gjson.return_value = output
+        goc = GithubOrgClient(orgc)
         self.assertEqual(goc.org(), output)
-        get_json.assert_called_once_with(f"https://api.github.com/orgs/{org}")
+        gjson.assert_called_once_with(f"https://api.github.com/orgs/{orgc}")
 
     def test_public_repos_url(self) -> None:
         """test the public_repos_url function"""
