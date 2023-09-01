@@ -2,7 +2,7 @@
 """this is a test file"""
 import unittest
 from parameterized import parameterized
-from typing import Dict, Tuple, List, Any
+from typing import Dict, Tuple, List, Any,
 from utils import (
     access_nested_map,
     get_json,
@@ -23,3 +23,14 @@ class TestAccessNestedMap(unittest.TestCase):
                                result: Any) -> None:
         """tests if the access method works"""
         self.assertEqual(access_nested_map(dmap, path), result)
+
+    @parameterized.expnd([
+        ({}, ("a",), KeyError),
+        ({"a", }, ("a", "b"), KeyError)
+    ])
+    def test_access_nested_map_exception(self,
+                                         dmap: Dict,
+                                         path: Tuple[str],
+                                         result: Exception) -> None:
+        """tests if the right excetion is raised"""
+        self.assertRaises(access_nested_map(dmap, path), result)
