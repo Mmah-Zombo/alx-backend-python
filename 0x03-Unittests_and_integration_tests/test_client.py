@@ -52,7 +52,14 @@ class TestGithubOrgClient(unittest.TestCase):
                     "id": 7697149,
                     "name": "episodes.dart",
                     "private": False,
+                    "url": "https://api.github.com/repos/google/episodes.dart",
                 },
+                {
+                    "id": 8566972,
+                    "name": "kratu",
+                    "private": False,
+                    "url": "https://api.github.com/repos/google/kratu"
+                }
             ]
         }
         gjson.return_value = test_data['repos']
@@ -61,6 +68,6 @@ class TestGithubOrgClient(unittest.TestCase):
                    new_callable=property) as pru:
             pru.return_value = test_data['repos_url']
             self.assertEqual(GithubOrgClient('google').public_repos(),
-                             ["episodes.dart"])
+                             ["episodes.dart", "kratu"])
             pru.assert_called_once()
         gjson.assert_called_once()
