@@ -85,8 +85,8 @@ class TestGithubOrgClient(unittest.TestCase):
         g_json.return_value = test_payload["repos"]
 
         with patch("client.GithubOrgClient._public_repos_url",
-                   new_callable=PropertyMock) as pru:
+                   new_callable=property) as pru:
             pru.return_value = test_payload["repos_url"]
-            self.assertAlmostEqual(GithubOrgClient("google").public_repos(),
+            self.assertEqual(GithubOrgClient("google").public_repos(),
                                    ["episodes.dart", "kratu"])
         g_json.assert_called_once()
