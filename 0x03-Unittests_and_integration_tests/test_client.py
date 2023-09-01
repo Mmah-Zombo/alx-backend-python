@@ -14,10 +14,10 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google", {"login": "google"}),
         ("abc", {"login": "abc"}),
     ])
-    @patch("get_json")
+    @patch("client.get_json")
     def test_org(self, org: str, output: Dict, get_json: Mock) -> None:
         """test that org returns the correct value"""
-        get_json.return_value = Mock(return_value=output)
+        get_json.return_value = output
         goc = GithubOrgClient(org)
         self.assertEqual(goc.org(), output)
         get_json.assert_called_once_with(f"https://api.github.com/orgs/{org}")
