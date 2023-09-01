@@ -3,7 +3,7 @@
 import unittest
 from parameterized import parameterized
 from typing import Dict, Tuple, List, Any, Callable
-from unittest import mock
+from unittest.mock import patch, Mock
 from utils import (
     access_nested_map,
     get_json,
@@ -43,15 +43,17 @@ class TestGetJson(unittest.TestCase):
 
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
-        ("http://holberton.io", {"payload": False}),
+        ("http://holberton.io", {"payload": False})
     ])
-    def test_get_json(
-            self,
-            test_url: str,
-            test_payload: Dict,
-            ) -> None:
-        """Tests `get_json`'s output."""
-        attrs = {'json.return_value': test_payload}
-        with patch("requests.get", return_value=Mock(**attrs)) as req_get:
-            self.assertEqual(get_json(test_url), test_payload)
-            req_get.assert_called_once_with(test_url)
+    def test_get_json(self,
+                      url: str,
+                      payload: Dict) -> None:
+        """tests if json is gotten"""
+        m_obj = Mock()
+        m_obj.json.return_value = payload
+
+        with patch("requests.get", return_value=m_obj) as mock_get:
+            result = get_json(url)
+            mock_get.assert_called_once_with(url)
+        
+        self.assertEqual(result, payload)
