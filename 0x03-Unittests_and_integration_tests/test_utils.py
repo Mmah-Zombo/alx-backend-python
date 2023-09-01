@@ -2,7 +2,8 @@
 """this is a test file"""
 import unittest
 from parameterized import parameterized
-from typing import Dict, Tuple, List, Any
+from typing import Dict, Tuple, List, Any, Callable
+from unittest import mock
 from utils import (
     access_nested_map,
     get_json,
@@ -35,3 +36,22 @@ class TestAccessNestedMap(unittest.TestCase):
         """tests if the correct exception is raised"""
         with self.assertRaises(error):
             access_nested_map(dmap, path)
+
+
+class TestGetJson(unittest.TestCase):
+    """contains unittests for the get_json function"""
+
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False})
+    ])
+    @mock.patch("requests.get")
+    def test_get_json(self,
+                      mock_get: Callable, uRl: str,
+                      test_payload: Dict) -> None:
+        """tests if json is gotten"""
+        mock_obj = mock.Mock()
+        mock_obj.json.return_value = test_payload
+        mock_get.return_value = mock_obj
+
+        self.assertEqual((get_json(uRl)), (test_payload))
