@@ -47,11 +47,12 @@ class TestGetJson(unittest.TestCase):
     ])
     @mock.patch("requests.get")
     def test_get_json(self,
-                      mock_get: Callable, uRl: str,
+                      mock_get: Callable, url: str,
                       test_payload: Dict) -> None:
         """tests if json is gotten"""
         mock_obj = mock.Mock()
         mock_obj.json.return_value = test_payload
         mock_get.return_value = mock_obj
-
-        self.assertEqual((get_json(uRl)), (test_payload))
+        result = get_json(url)
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(result, test_payload)
