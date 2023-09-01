@@ -45,23 +45,18 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch("client.get_json")
     def test_public_repos(self, gjson: Mock) -> None:
         """tests the public_repos function"""
-        test_data = {
-            'repos_url': "https://api.github.com/users/google/repos",
-            'repos': [
-                {
-                    "id": 7697149,
-                    "name": "episodes.dart",
-                    "private": False,
-                },
-            ]
-        }
-        gjson.return_value = test_data
+        content = [
+            {"name": "repo1", "license": {"key": "MIT"}},
+            {"name": "repo2", "license": {"key": "Apache"}}
+        ]
+        gjson.return_value = content
+        output = "https://api.github.com/orgs/testorg/repos"
 
         with patch.object(GithubOrgClient,
                           '_public_repos_url',
-                          new_callable=property) as pru:
-            pru.return_value = test_data['repos_url']
-            goc = GithubOrgClient('google')
-            self.assertEqual(goc.public_repos(), ["episodes.dart"])
-            pru.assert_called_once()
-        gjson.assert_called_once()
+                          new_callable=property,
+                          return_value=output):
+            goc = GithubOrgClient('testorg')
+            repos = goc.public_repos(license="MIT")
+            gjson.assert_called_once()
+            self.assertEqual(repos, ["repo1"])
