@@ -88,5 +88,6 @@ class TestGithubOrgClient(unittest.TestCase):
                    new_callable=property) as pru:
             pru.return_value = test_payload["repos_url"]
             self.assertEqual(GithubOrgClient("google").public_repos(),
-                                   ["episodes.dart", "kratu"])
+                             ["episodes.dart", "kratu"])
+            pru.assert_called_once()
         g_json.assert_called_once()
