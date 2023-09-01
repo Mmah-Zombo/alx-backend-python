@@ -20,6 +20,5 @@ class TestGithubOrgClient(unittest.TestCase):
         get_json.return_value = output
         goc = GithubOrgClient(org)
         response = goc.org()
-        get_json.assert_called_once_with(f"https://api.github.com/orgs/{org}")
-
         self.assertEqual(response, output)
+        get_json.assert_called_once_with(f"https://api.github.com/orgs/{org}")
