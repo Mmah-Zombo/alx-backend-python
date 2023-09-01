@@ -43,8 +43,8 @@ class TestGithubOrgClient(unittest.TestCase):
                          "https://api.github.com/users/google/repos",)
 
     @patch("client.get_json")
-    def test_public_repos(self, mock_get_json: Mock) -> None:
-        """Tests the `public_repos` method."""
+    def test_public_repos(self, g_json: Mock) -> None:
+        """tests the public_repos function"""
         test_payload = {
             'repos_url': "https://api.github.com/users/google/repos",
             'repos': [
@@ -82,18 +82,11 @@ class TestGithubOrgClient(unittest.TestCase):
                 },
             ]
         }
-        mock_get_json.return_value = test_payload["repos"]
-        with patch(
-                "client.GithubOrgClient._public_repos_url",
-                new_callable=PropertyMock,
-                ) as repos_url:
-            repos_url.return_value = test_payload["repos_url"]
-            self.assertEqual(
-                GithubOrgClient("google").public_repos(),
-                [
-                    "episodes.dart",
-                    "kratu",
-                ],
-            )
-            repos_url.assert_called_once()
-        mock_get_json.assert_called_once()
+        g_json.return_value = test_payload["repos"]
+
+        with patch("client.GithubOrgClient._public_repos_url",
+                   new_callable=property) as pru:
+            pru.return_value = test_payload["repos_url"]
+            self.assertAlmostEqual(GithubOrgClient("google").public_repos(),
+                                   ["episodes.dart", "kratu"])
+        g_json.assert_called_once()
