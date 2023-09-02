@@ -21,20 +21,27 @@ class TestGithubOrgClient(unittest.TestCase):
     """tests for the GithubOrgClient"""
 
     @parameterized.expand([
-        ("google", {'login': "google"}),
-        ("abc", {'login': "abc"}),
+        ("google", {"login": "google"}),
+        ("abc", {"login": "abc"}),
     ])
-    @patch(
-        "client.get_json",
-    )
-    def test_org(self, org: str, resp: Dict, mocked_fxn: MagicMock) -> None:
-        """Tests the `org` method."""
-        mocked_fxn.return_value = MagicMock(return_value=resp)
-        gh_org_client = GithubOrgClient(org)
-        self.assertEqual(gh_org_client.org(), resp)
-        mocked_fxn.assert_called_once_with(
-            "https://api.github.com/orgs/{}".format(org)
-        )
+    @patch("client.get_json")
+    def test_org(self, orgc: str, output: Dict, gjson: MagicMock) -> None:
+        """tests the org function"""
+
+        gjson.return_value = output
+        goc = GithubOrgClient(orgc)
+        self.assertEqual(goc.org(), output)
+        gjson.assert_called_once_with(f"https://api.github.com/orgs/{orgc}")
+
+    def test_public_repos_url(self) -> None:
+        """test the public_repos_url function"""
+        with patch.object(GithubOrgClient, 'org', new_callable=property) as og:
+            og.return_value = {
+                'repos_url': "https://api.github.com/users/google/repos",
+            }
+
+        self.assertEqual(GithubOrgClient._public_repos_url(),
+                         "https://api.github.com/users/google/repos",)
 
     @patch("client.get_json")
     def test_public_repos(self, g_json: Mock) -> None:
