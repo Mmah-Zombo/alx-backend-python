@@ -56,11 +56,13 @@ class TestGithubOrgClient(unittest.TestCase):
                     "id": 7697149,
                     "name": "episodes.dart",
                     "private": False,
+                    "has_issues": True,
                 },
                 {
                     "id": 8566972,
                     "name": "kratu",
                     "private": False,
+                    "has_issues": True,
                 },
             ]
         }
@@ -86,3 +88,29 @@ class TestGithubOrgClient(unittest.TestCase):
                 repo, li_key
             ), result
         )
+
+
+@parameterized_class([
+    {"org_payload": TEST_PAYLOAD[0][0],
+     "repos_payload": TEST_PAYLOAD[0][1],
+     "expected_repos": TEST_PAYLOAD[0][2],
+     "apache2_repos": TEST_PAYLOAD[0][3]}
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """contains integration test for the public_repo function"""
+    @classmethod
+    def setUpClass(cls) -> None:
+        """setsup the fixtures"""
+        cls.get_patcher = patch('requests.get')
+
+        # Mock requests.get to return the org and repos payloads
+        cls.mock_get = cls.get_patcher.start()
+        cls.mock_get.side_effect = [
+            cls.org_payload,  # Mock the org payload
+            cls.repos_payload,  # Mock the repos payload
+        ]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """pull down the fixtures"""
+        cls.get_patcher_stop()
