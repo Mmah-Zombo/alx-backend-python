@@ -73,3 +73,16 @@ class TestGithubOrgClient(unittest.TestCase):
                              ["episodes.dart", "kratu"])
             pru.assert_called_once()
         g_json.assert_called_once()
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, repo: Dict, li_key: str,
+                         result: bool) -> None:
+        """tests if the has_license function"""
+        self.assertEqual(
+            GithubOrgClient("google").has_license(
+                repo, li_key
+            ), result
+        )
