@@ -110,11 +110,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             cls.repos_payload,  # Mock the repos payload
         ]
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        """pull down the fixtures"""
-        cls.get_patcher_stop()
-
     def test_public_repos(self) -> None:
         """tests the public_repos function"""
         self.assertEqual(
@@ -126,3 +121,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(
             GithubOrgClient("google").public_repos(license="apache-2.0"),
             self.apache2_repos)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """pull down the fixtures"""
+        cls.get_patcher_stop()
