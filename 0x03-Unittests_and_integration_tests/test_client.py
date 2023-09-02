@@ -28,7 +28,7 @@ class TestGithubOrgClient(unittest.TestCase):
         "client.get_json",
     )
     def test_org(self, orgc: str, output: Dict, gjson: MagicMock) -> None:
-        """tests for the GithubOrgClient.org function"""
+        """Tests the `org` method."""
         gjson.return_value = output
         goc = GithubOrgClient(orgc)
         self.assertEqual(goc.org(), output)
