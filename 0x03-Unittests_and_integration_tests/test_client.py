@@ -31,7 +31,9 @@ class TestGithubOrgClient(unittest.TestCase):
         gjson.return_value = output
         goc = GithubOrgClient(orgc)
         self.assertEqual(goc.org(), output)
-        gjson.assert_called_once_with(f"https://api.github.com/orgs/{orgc}")
+        gjson.assert_called_once_with(
+            "https://api.github.com/orgs/{}".format(orgc)
+        )
 
     def test_public_repos_url(self) -> None:
         """test the public_repos_url function"""
