@@ -21,12 +21,13 @@ class TestGithubOrgClient(unittest.TestCase):
     """tests for the GithubOrgClient"""
 
     @parameterized.expand([
-        ("google", {"login": "google"}),
-        ("abc", {"login": "abc"}),
+        ("google", {'login': "google"}),
+        ("abc", {'login': "abc"}),
     ])
-    @patch("client.get_json")
+    @patch(
+        "client.get_json",
+    )
     def test_org(self, orgc: str, output: Dict, gjson: MagicMock) -> None:
-
         gjson.return_value = output
         goc = GithubOrgClient(orgc)
         self.assertEqual(goc.org(), output)
