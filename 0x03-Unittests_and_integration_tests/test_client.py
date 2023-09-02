@@ -26,7 +26,6 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     @patch("client.get_json")
     def test_org(self, orgc: str, output: Dict, gjson: MagicMock) -> None:
-        """tests the org function"""
 
         gjson.return_value = output
         goc = GithubOrgClient(orgc)
